@@ -1,0 +1,11 @@
+{
+  "fields": {
+    "project": {
+      "id": "10033"
+    },
+    "summary": "API Automation Test Execution",
+    "issuetype": {
+      "name": "Test Execution"
+    }
+  }
+}

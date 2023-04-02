@@ -1,0 +1,11 @@
+.idea
+*.iml
+
+test-artifacts/
+target/
+*.versionsBackup
+*.ipr
+*.iws
+*mvnw*
+/maven/.mvn/
+.mvn
