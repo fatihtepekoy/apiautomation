@@ -115,9 +115,9 @@
       <artifactId>cucumber-picocontainer</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.apache.httpcomponents</groupId>
-      <artifactId>httpclient</artifactId>
-      <version>4.5.14</version>
+      <groupId>org.apache.httpcomponents.client5</groupId>
+      <artifactId>httpclient5</artifactId>
+      <version>5.2.1</version>
     </dependency>
   </dependencies>
 
@@ -138,6 +138,8 @@
         <artifactId>maven-surefire-plugin</artifactId>
         <version>3.0.0-M7</version>
         <configuration>
+          <parallel>classes</parallel>
+          <threadCount>2</threadCount>
           <testFailureIgnore>true</testFailureIgnore>
           <reportsDirectory>${basedir}/target/reports/xml</reportsDirectory>
           <properties>
@@ -145,7 +147,6 @@
               cucumber.junit-platform.naming-strategy=long
             </configurationParameters>
           </properties>
-          <!--          <rerunFailingTestsCount>1</rerunFailingTestsCount>-->
         </configuration>
       </plugin>
       <plugin>

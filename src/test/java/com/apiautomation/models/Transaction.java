@@ -2,20 +2,25 @@ package com.apiautomation.models;
 
 import static java.lang.ThreadLocal.withInitial;
 
-import io.restassured.RestAssured;
-import io.restassured.response.Response;
-import io.restassured.specification.RequestSpecification;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import io.restassured.path.json.JsonPath;
 import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
+import org.apache.hc.core5.http.Header;
+import org.apache.hc.core5.http.HttpHeaders;
+import org.apache.hc.core5.http.message.BasicHeader;
 
 @Getter
 @Setter
 public class Transaction {
 
+  private static final ObjectMapper mapper = new ObjectMapper();
+
   // TODO Comment in to use your token
   // private String accessToken = Constants.QA_INITIAL_ACCESS_TOKEN;
   private String accessToken = "Test";
+
 
   private final ThreadLocal<CommonRequestContext> testContexts = withInitial(
       CommonRequestContext::new);
@@ -23,23 +28,15 @@ public class Transaction {
   public Transaction() {
   }
 
-  public RequestSpecification getRequest() {
-    return testContexts.get().getRequest();
-  }
-
-  private void setRequest(RequestSpecification requestSpecification) {
-    testContexts.get().setRequest(requestSpecification);
-  }
-
-  public Response getResponse() {
+  public HttpResponse getResponse() {
     return testContexts.get().getResponse();
   }
 
-  public void setResponse(Response response) {
+  public void setResponse(HttpResponse response) {
     testContexts.get().setResponse(response);
   }
 
-  public Object getPayload() {
+  public Object getObjectPayload() {
     return testContexts.get().getObjectPayload();
   }
 
@@ -51,7 +48,7 @@ public class Transaction {
     testContexts.get().setJsonPayload(payloadAsString);
   }
 
-  public <T> T getPayload(Class<T> clazz) {
+  public <T> T getObjectPayload(Class<T> clazz) {
     return testContexts.get().getObjectPayload(clazz);
   }
 
@@ -72,17 +69,21 @@ public class Transaction {
     testContexts.get().setJsonPayload(null);
   }
 
-  public void setRequestWithJsonHeaders() {
-    setRequest(RestAssured.given().header("Content-Type", "application/json"));
+  public void initRequestWithJsonHeaders() {
+    testContexts.get().setHeader(new BasicHeader(HttpHeaders.CONTENT_TYPE, "application/json"));
     clearPayload();
   }
 
+  public Header getHeader() {
+    return testContexts.get().getHeader();
+  }
+
   public String getValueFromResponse(String path) {
-    return testContexts.get().getResponse().jsonPath().getString(path);
+    return JsonPath.given(testContexts.get().getResponse().getBody()).getString(path);
   }
 
   public List<String> getValueListFromResponse(String path) {
-    return testContexts.get().getResponse().jsonPath().getList(path, String.class);
+    return JsonPath.given(testContexts.get().getResponse().getBody()).getList(path);
   }
 
   public void setUrl(String url) {
@@ -94,6 +95,6 @@ public class Transaction {
   }
 
   public int getResponseStatusCode() {
-    return getResponse().getStatusCode();
+    return getResponse().getCode();
   }
 }

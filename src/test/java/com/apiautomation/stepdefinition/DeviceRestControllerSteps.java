@@ -45,13 +45,13 @@ public class DeviceRestControllerSteps extends AbstractSteps {
 
   @Given("device objects endpoint")
   public void deviceObjectsEndpoint() {
-    transaction.setRequestWithJsonHeaders();
+    transaction.initRequestWithJsonHeaders();
     transaction.setUrl(Endpoint.OBJECTS.getEndpoint());
   }
 
   @Given("device objects endpoint with id")
   public void deviceObjectsEndpointWithId() {
-    transaction.setRequestWithJsonHeaders();
+    transaction.initRequestWithJsonHeaders();
     Map<String, String> parameters = new HashMap<>();
     parameters.put("id", deviceContext.getDeviceResponseDTO().getId());
     transaction.setUrl(Utils.generateUrl(Endpoint.OBJECTS_WITH_ID.getEndpoint(), parameters));
@@ -59,7 +59,7 @@ public class DeviceRestControllerSteps extends AbstractSteps {
 
   @And("device objects endpoint with multiple id")
   public void deviceObjectsEndpointWithMultipleId() {
-    transaction.setRequestWithJsonHeaders();
+    transaction.initRequestWithJsonHeaders();
     List<NameValuePair> parameters = deviceContext.getDeviceIds()
                                                   .stream()
                                                   .map(deviceId -> new BasicNameValuePair("id",
@@ -95,8 +95,10 @@ public class DeviceRestControllerSteps extends AbstractSteps {
 
   @And("a device payload with different name {string}")
   public void aDevicePayloadWithDifferentName(String name) {
-    deviceContext.getDeviceRequestDTO().setName(name);
-    transaction.setObjectPayload(deviceContext.getDeviceRequestDTO());
+    DeviceRequestDTO deviceRequestDTO = DeviceRequestDTO.generateDevicePayload();
+    deviceRequestDTO.setName(name);
+    deviceContext.setDeviceRequestDTO(deviceRequestDTO);
+    transaction.setObjectPayload(deviceRequestDTO);
   }
 
   @And("the returned device name is same {string} with the we sent")

@@ -3,15 +3,14 @@ package com.apiautomation.models;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
-import io.restassured.response.Response;
-import io.restassured.specification.RequestSpecification;
 import lombok.Data;
+import org.apache.hc.core5.http.Header;
 
 @Data
 public class CommonRequestContext {
 
-  private RequestSpecification request;
-  private Response response;
+  private HttpResponse response;
+  private Header header;
   private Object objectPayload;
   private String jsonPayload;
   private String url;

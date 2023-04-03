@@ -1,8 +1,8 @@
 package com.apiautomation.operation;
 
 import com.apiautomation.models.BaseOperation;
+import com.apiautomation.models.HttpResponse;
 import com.apiautomation.models.Transaction;
-import io.restassured.response.Response;
 
 public class DeviceOperations extends BaseOperation {
 
@@ -10,15 +10,15 @@ public class DeviceOperations extends BaseOperation {
     super();
   }
 
-  public static Response create(Transaction transaction) {
+  public static HttpResponse create(Transaction transaction) {
     return postRequest(transaction);
   }
 
-  public static Response update(Transaction transaction) {
+  public static HttpResponse update(Transaction transaction) {
     return putRequest(transaction);
   }
 
-  public static Response getDevices(Transaction transaction) {
+  public static HttpResponse getDevices(Transaction transaction) {
     return getRequest(transaction);
   }
 }

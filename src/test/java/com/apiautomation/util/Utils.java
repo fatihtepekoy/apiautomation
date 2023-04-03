@@ -88,7 +88,6 @@ public class Utils {
     }
 
     return result;
-
   }
 
   public static Double randomDoubleValue() {
