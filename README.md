@@ -22,3 +22,4 @@ Topics
 
 
 
+PS: The free res api service let one person send 100 request a day.
