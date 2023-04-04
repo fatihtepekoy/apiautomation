@@ -17,9 +17,9 @@ import org.apache.hc.core5.http.io.entity.EntityUtils;
 import org.apache.hc.core5.http.io.entity.StringEntity;
 
 
-public abstract class BaseOperation {
+public abstract class BaseApi {
 
-  public BaseOperation() {
+  public BaseApi() {
   }
 
   protected static HttpResponse postRequest(Transaction transaction) {

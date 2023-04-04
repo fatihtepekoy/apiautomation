@@ -8,8 +8,6 @@ import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.hc.core5.http.Header;
-import org.apache.hc.core5.http.HttpHeaders;
-import org.apache.hc.core5.http.message.BasicHeader;
 
 @Getter
 @Setter
@@ -28,7 +26,7 @@ public class Transaction {
   public Transaction() {
   }
 
-  public HttpResponse getResponse() {
+  private HttpResponse getResponse() {
     return testContexts.get().getResponse();
   }
 
@@ -45,6 +43,7 @@ public class Transaction {
   }
 
   public void setJsonPayload(String payloadAsString) {
+    clearPayload();
     testContexts.get().setJsonPayload(payloadAsString);
   }
 
@@ -61,17 +60,13 @@ public class Transaction {
   }
 
   public void setObjectPayload(Object payload) {
+    clearPayload();
     testContexts.get().setObjectPayload(payload);
   }
 
-  public void clearPayload() {
+  private void clearPayload() {
     testContexts.get().setObjectPayload(null);
     testContexts.get().setJsonPayload(null);
-  }
-
-  public void initRequestWithJsonHeaders() {
-    testContexts.get().setHeader(new BasicHeader(HttpHeaders.CONTENT_TYPE, "application/json"));
-    clearPayload();
   }
 
   public Header getHeader() {

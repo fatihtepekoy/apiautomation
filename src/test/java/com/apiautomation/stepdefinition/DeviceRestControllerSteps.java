@@ -6,18 +6,10 @@ import com.apiautomation.helper.Helper;
 import com.apiautomation.models.AbstractSteps;
 import com.apiautomation.models.dto.request.DeviceRequestDTO;
 import com.apiautomation.models.testcontext.DeviceContext;
-import com.apiautomation.operation.DeviceOperations;
-import com.apiautomation.util.Endpoint;
-import com.apiautomation.util.Utils;
+import com.apiautomation.operation.DeviceApi;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.When;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
 
 public class DeviceRestControllerSteps extends AbstractSteps {
 
@@ -42,32 +34,6 @@ public class DeviceRestControllerSteps extends AbstractSteps {
                  .add(Helper.createDevice(DeviceRequestDTO.generateDevicePayload()).getId());
   }
 
-
-  @Given("device objects endpoint")
-  public void deviceObjectsEndpoint() {
-    transaction.initRequestWithJsonHeaders();
-    transaction.setUrl(Endpoint.OBJECTS.getEndpoint());
-  }
-
-  @Given("device objects endpoint with id")
-  public void deviceObjectsEndpointWithId() {
-    transaction.initRequestWithJsonHeaders();
-    Map<String, String> parameters = new HashMap<>();
-    parameters.put("id", deviceContext.getDeviceResponseDTO().getId());
-    transaction.setUrl(Utils.generateUrl(Endpoint.OBJECTS_WITH_ID.getEndpoint(), parameters));
-  }
-
-  @And("device objects endpoint with multiple id")
-  public void deviceObjectsEndpointWithMultipleId() {
-    transaction.initRequestWithJsonHeaders();
-    List<NameValuePair> parameters = deviceContext.getDeviceIds()
-                                                  .stream()
-                                                  .map(deviceId -> new BasicNameValuePair("id",
-                                                      deviceId))
-                                                  .collect(Collectors.toList());
-    transaction.setUrl(Utils.addQuery2Url(Endpoint.OBJECTS.getEndpoint(), parameters));
-  }
-
   @And("a device payload with valid values")
   public void aDevicePayloadWithValidValues() {
     transaction.setObjectPayload(DeviceRequestDTO.generateDevicePayload());
@@ -75,25 +41,31 @@ public class DeviceRestControllerSteps extends AbstractSteps {
 
   @When("the device is created")
   public void theDeviceIsCreated() {
-    transaction.setResponse(DeviceOperations.create(transaction));
+    transaction.setResponse(DeviceApi.create(transaction, deviceContext));
   }
 
   @When("the device is listed")
   public void theDeviceIsListed() {
-    transaction.setResponse(DeviceOperations.getDevices(transaction));
+    transaction.setResponse(DeviceApi.getDevice(transaction, deviceContext));
   }
 
   @When("the device is updated")
   public void theDeviceIsUpdated() {
-    transaction.setResponse(DeviceOperations.update(transaction));
+    transaction.setResponse(DeviceApi.update(transaction, deviceContext));
   }
 
-  @When("the devices are listed")
+  @When("the all devices are listed")
   public void theDevicesAreListed() {
-    transaction.setResponse(DeviceOperations.getDevices(transaction));
+    transaction.setResponse(DeviceApi.getDevices(transaction));
   }
 
-  @And("a device payload with different name {string}")
+
+  @When("the some devices are listed")
+  public void theSomeDevicesAreListed() {
+    transaction.setResponse(DeviceApi.getSomeDevices(transaction, deviceContext));
+  }
+
+  @Given("a device payload with following name {string}")
   public void aDevicePayloadWithDifferentName(String name) {
     DeviceRequestDTO deviceRequestDTO = DeviceRequestDTO.generateDevicePayload();
     deviceRequestDTO.setName(name);
@@ -118,5 +90,6 @@ public class DeviceRestControllerSteps extends AbstractSteps {
     assertThat(transaction.getValueListFromResponse("id")
                           .containsAll(deviceContext.getDeviceIds())).isTrue();
   }
+
 }
 

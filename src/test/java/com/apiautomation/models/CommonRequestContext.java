@@ -5,12 +5,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import lombok.Data;
 import org.apache.hc.core5.http.Header;
+import org.apache.hc.core5.http.HttpHeaders;
+import org.apache.hc.core5.http.message.BasicHeader;
 
 @Data
 public class CommonRequestContext {
 
   private HttpResponse response;
-  private Header header;
+  private Header header = new BasicHeader(HttpHeaders.CONTENT_TYPE, "application/json");
   private Object objectPayload;
   private String jsonPayload;
   private String url;

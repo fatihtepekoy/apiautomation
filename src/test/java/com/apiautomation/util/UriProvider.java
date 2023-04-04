@@ -9,6 +9,6 @@ public class UriProvider {
   }
 
   public static String getAccessTokenUrl() {
-    return Endpoint.UA_AUTH_ACCESS_TOKEN.getEndpoint();
+    return configurationHolder.getProperty("auth.accessTokenUrl");
   }
 }
