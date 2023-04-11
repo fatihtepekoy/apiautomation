@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.cucumber.core.options.CurlOption.HttpMethod;
 import java.io.IOException;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.hc.client5.http.classic.methods.HttpDelete;
 import org.apache.hc.client5.http.classic.methods.HttpGet;
 import org.apache.hc.client5.http.classic.methods.HttpPatch;
@@ -11,13 +12,17 @@ import org.apache.hc.client5.http.classic.methods.HttpPost;
 import org.apache.hc.client5.http.classic.methods.HttpPut;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
 import org.apache.hc.client5.http.impl.classic.HttpClients;
+import org.apache.hc.core5.http.ClassicHttpResponse;
 import org.apache.hc.core5.http.Header;
 import org.apache.hc.core5.http.HttpHeaders;
+import org.apache.hc.core5.http.ParseException;
 import org.apache.hc.core5.http.io.entity.EntityUtils;
 import org.apache.hc.core5.http.io.entity.StringEntity;
 
-
+@Slf4j
 public abstract class BaseApi {
+
+  private static final ObjectMapper mapper = new ObjectMapper();
 
   public BaseApi() {
   }
@@ -97,9 +102,7 @@ public abstract class BaseApi {
 
   private static HttpResponse get(HttpGet httpGet) {
     try (CloseableHttpClient httpclient = HttpClients.createDefault()) {
-      return httpclient.execute(httpGet,
-          response -> new HttpResponse(EntityUtils.toString(response.getEntity()),
-              response.getCode()));
+      return httpclient.execute(httpGet, BaseApi::mapToHttpResponse);
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -108,9 +111,7 @@ public abstract class BaseApi {
 
   private static HttpResponse delete(HttpDelete httpDelete) {
     try (CloseableHttpClient httpclient = HttpClients.createDefault()) {
-      return httpclient.execute(httpDelete,
-          response -> new HttpResponse(EntityUtils.toString(response.getEntity()),
-              response.getCode()));
+      return httpclient.execute(httpDelete, BaseApi::mapToHttpResponse);
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -119,9 +120,7 @@ public abstract class BaseApi {
 
   private static HttpResponse post(HttpPost httpDelete) {
     try (CloseableHttpClient httpclient = HttpClients.createDefault()) {
-      return httpclient.execute(httpDelete,
-          response -> new HttpResponse(EntityUtils.toString(response.getEntity()),
-              response.getCode()));
+      return httpclient.execute(httpDelete, BaseApi::mapToHttpResponse);
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -130,9 +129,7 @@ public abstract class BaseApi {
 
   private static HttpResponse put(HttpPut httpPut) {
     try (CloseableHttpClient httpclient = HttpClients.createDefault()) {
-      return httpclient.execute(httpPut,
-          response -> new HttpResponse(EntityUtils.toString(response.getEntity()),
-              response.getCode()));
+      return httpclient.execute(httpPut, BaseApi::mapToHttpResponse);
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -141,13 +138,17 @@ public abstract class BaseApi {
 
   private static HttpResponse patch(HttpPatch httpPatch) {
     try (CloseableHttpClient httpclient = HttpClients.createDefault()) {
-      return httpclient.execute(httpPatch,
-          response -> new HttpResponse(EntityUtils.toString(response.getEntity()),
-              response.getCode()));
+      return httpclient.execute(httpPatch, BaseApi::mapToHttpResponse);
     } catch (IOException e) {
       e.printStackTrace();
     }
     return null;
+  }
+
+  private static HttpResponse mapToHttpResponse(ClassicHttpResponse response) throws IOException, ParseException {
+    String jsonBody = mapper.writerWithDefaultPrettyPrinter()
+                            .writeValueAsString(mapper.readTree(EntityUtils.toString(response.getEntity())));
+    return new HttpResponse(jsonBody, response.getCode());
   }
 
   private static String createJSONPayload(Object rawPayload) {
@@ -162,12 +163,17 @@ public abstract class BaseApi {
   }
 
   private static void logRequest(Transaction transaction, HttpMethod httpMethod) {
+    log.debug("URL : " + transaction.getUrl());
+    log.debug("HTTP method : " + httpMethod.toString());
+    log.debug("Payload : " + transaction.getPayloadWithJson());
     System.out.println("URL : " + transaction.getUrl());
     System.out.println("HTTP method : " + httpMethod.toString());
     System.out.println("Payload : " + transaction.getPayloadWithJson());
   }
 
   private static void logResponse(HttpResponse response) {
+    log.debug("Http response code : " + response.getCode());
+    log.debug("Http response body : \n" + response.getBody());
     System.out.println("Http response code : " + response.getCode());
     System.out.println("Http response body : \n" + response.getBody());
   }

@@ -52,8 +52,8 @@ Feature: Real REST API which is ready to handle your HTTP requests 24/7 for free
       Then the response code is "200"
 #      And the returned devices contains the devices that we created
 
-      @Run
-    Scenario: List some devices
+
+      Scenario: List some devices
         Given a list of devices are already available
         When the some devices are listed
         Then the response code is "200"
