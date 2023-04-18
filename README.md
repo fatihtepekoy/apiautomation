@@ -5,6 +5,12 @@ This is the simple and well designed setup with Cucumber 7, Junit 5, Apache Http
 
 Also I wanted to give an example that how you can make your api automation test project structure. The packages and classes named according to the free open rest api. 
 
+The api url which this project using is below;
+
+api url       : https://api.restful-api.dev
+documentation : https://restful-api.dev/
+
+
 The project also has a static method for getting token.(oauth2). It is commented out now. First comment in the code part and need to enter your cridentials to properties file.   It has also a generic datatable configration class, so that you easly can read cucumber datatables.
 
 Feel free to give suggestions and your contributions. I will try to make this project work with an open api, so that you can easly run and see the test results.
