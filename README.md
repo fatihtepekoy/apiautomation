@@ -10,6 +10,7 @@ The api url which this project using is below;
 api url       : https://api.restful-api.dev
 documentation : https://restful-api.dev/
 
+This api is totally free, you can just run the tests methods and see the test results. Thats all. 
 
 The project also has a static method for getting token.(oauth2). It is commented out now. First comment in the code part and need to enter your cridentials to properties file.   It has also a generic datatable configration class, so that you easly can read cucumber datatables.
 
