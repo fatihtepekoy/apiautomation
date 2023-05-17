@@ -14,7 +14,7 @@ This api is totally free, you can just run the tests methods and see the test re
 
 The project also has a static method for getting token.(oauth2). It is commented out now. First comment in the code part and need to enter your cridentials to properties file.   It has also a generic datatable configration class, so that you easly can read cucumber datatables.
 
-Feel free to give suggestions and your contributions. I will try to make this project work with an open api, so that you can easly run and see the test results.
+Feel free to give suggestions and your contributions. 
 
 I will update this readme file soon with the topics below
 
@@ -25,8 +25,6 @@ Topics
 * Generating the urls wiht path variables and query variables
 * ObjectPayload and String payload
 * Pico container and how you can use it for dependency injection to run your test in step methods placed in different classes
-
-
 
 
 PS: The free res api service let one person send 100 request a day.
